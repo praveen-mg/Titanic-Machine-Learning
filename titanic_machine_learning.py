@@ -38,39 +38,42 @@ def cleanData(data):
 
 
 
-data_train = cleanData(titanic_train)
-predictors = ['Sex','Pclass']
-feature = data_train[predictors]
-label = data_train['Survived']
-#print "Printing Survived"
+if __name__ == "__main__":
+    
+    data_train = cleanData(titanic_train)
+    predictors = ['Sex','Pclass']
+    feature = data_train[predictors]
+    label = data_train['Survived']
+    #print "Printing Survived"
+    
+    """
+    Spliting the training data to test the prediction
+    """
+    feature_train, feature_test,label_train,label_test = train_test_split(feature,label, test_size = 0.4)
+    
+    clf = tree.DecisionTreeClassifier()
+    
+    clf.fit(feature_train,label_train)
+    
+    pred = clf.predict(feature_test)
+    score = accuracy_score(pred,label_test)
+    print "Accuracy value is:",score
+    
+    """
+    Fit Decision tree to entire train data and predict the test data
+     
+    
+    """
+    data_test = cleanData(titanic_test)
+    
+    clf.fit(feature,label)
+    pred = clf.predict(data_test[predictors])
+    submission =  pandas.DataFrame({
+                     "PassengerID": titanic_test["PassengerId"],
+                      "Survived": pred})
+                      
+    submission.to_csv('submission.csv',index = False)
 
-"""
-Spliting the training data to test the prediction
-"""
-feature_train, feature_test,label_train,label_test = train_test_split(feature,label, test_size = 0.4)
-
-clf = tree.DecisionTreeClassifier()
-
-clf.fit(feature_train,label_train)
-
-pred = clf.predict(feature_test)
-score = accuracy_score(pred,label_test)
-print "Accuracy value is:",score
-
-"""
-Fit Decision tree to entire train data and predict the test data
- 
-
-"""
-data_test = cleanData(titanic_test)
-
-clf.fit(feature,label)
-pred = clf.predict(data_test[predictors])
-submission =  pandas.DataFrame({
-                 "PassengerID": titanic_test["PassengerId"],
-                  "Survived": pred})
-                  
-submission.to_csv('submission.csv',index = False)
 
 
 
